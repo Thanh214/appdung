@@ -1,0 +1,22 @@
+# Allow .bin files to be downloaded
+<Files "*.bin">
+    Header set Content-Type "application/octet-stream"
+    Header set Content-Disposition "attachment"
+</Files>
+
+# Enable CORS for API endpoints
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type"
+</IfModule>
+
+# Directory listing disabled for security
+Options -Indexes
+
+# Prevent .json files from being accessed directly (optional security)
+<FilesMatch "\.json$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+
