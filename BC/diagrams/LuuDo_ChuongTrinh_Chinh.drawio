@@ -1,0 +1,219 @@
+<mxfile host="app.diagrams.net" modified="2024-01-01T00:00:00.000Z" agent="draw.io" version="22.0.0">
+  <diagram name="Chương trình chính" id="chuong-trinh-chinh">
+    <mxGraphModel dx="950" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="LƯU ĐỒ CHƯƠNG TRÌNH CHÍNH ESP32" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#1a5f2a" vertex="1" parent="1">
+          <mxGeometry x="220" y="20" width="350" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- Start (Oval) -->
+        <mxCell id="start" value="Bắt đầu" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="355" y="70" width="100" height="50" as="geometry" />
+        </mxCell>
+        
+        <!-- Process: Init hardware (Rectangle) -->
+        <mxCell id="init1" value="Khởi tạo Serial, LCD" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="345" y="145" width="120" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Process: Init sensors (Rectangle) -->
+        <mxCell id="init2" value="Khởi tạo Cảm biến,&#xa;Relay, Nút bấm" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="340" y="205" width="130" height="45" as="geometry" />
+        </mxCell>
+        
+        <!-- Process: Connect WiFi (Rectangle) -->
+        <mxCell id="init3" value="Kết nối WiFi" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="355" y="270" width="100" height="35" as="geometry" />
+        </mxCell>
+        
+        <!-- Process: Connect MQTT (Rectangle) -->
+        <mxCell id="init4" value="Kết nối MQTT Broker" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="345" y="325" width="120" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Input: Load config (Parallelogram) -->
+        <mxCell id="input1" value="Tải cấu hình từ NVS" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="335" y="385" width="140" height="45" as="geometry" />
+        </mxCell>
+        
+        <!-- Process: Create tasks (Rectangle with double lines - subroutine) -->
+        <mxCell id="tasks" value="Tạo các Task FreeRTOS" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="335" y="455" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Subroutine 1 (Rectangle with double lines) -->
+        <mxCell id="sub1" value="Task đọc cảm biến" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;strokeWidth=1" vertex="1" parent="1">
+          <mxGeometry x="75" y="530" width="120" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="sub1-line" value="" style="line;strokeWidth=2;html=1;fillColor=none;strokeColor=#82b366" vertex="1" parent="1">
+          <mxGeometry x="82" y="537" width="106" height="5" as="geometry" />
+        </mxCell>
+        
+        <!-- Subroutine 2 -->
+        <mxCell id="sub2" value="Task điều khiển Relay" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;strokeWidth=1" vertex="1" parent="1">
+          <mxGeometry x="225" y="530" width="120" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="sub2-line" value="" style="line;strokeWidth=2;html=1;fillColor=none;strokeColor=#b85450" vertex="1" parent="1">
+          <mxGeometry x="232" y="537" width="106" height="5" as="geometry" />
+        </mxCell>
+        
+        <!-- Subroutine 3 -->
+        <mxCell id="sub3" value="Task hiển thị LCD" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;strokeWidth=1" vertex="1" parent="1">
+          <mxGeometry x="375" y="530" width="120" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="sub3-line" value="" style="line;strokeWidth=2;html=1;fillColor=none;strokeColor=#9673a6" vertex="1" parent="1">
+          <mxGeometry x="382" y="537" width="106" height="5" as="geometry" />
+        </mxCell>
+        
+        <!-- Subroutine 4 -->
+        <mxCell id="sub4" value="Task xử lý MQTT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b3e5fc;strokeColor=#03a9f4;fontSize=11;strokeWidth=1" vertex="1" parent="1">
+          <mxGeometry x="525" y="530" width="120" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="sub4-line" value="" style="line;strokeWidth=2;html=1;fillColor=none;strokeColor=#03a9f4" vertex="1" parent="1">
+          <mxGeometry x="532" y="537" width="106" height="5" as="geometry" />
+        </mxCell>
+        
+        <!-- Process: Loop forever (Rectangle) -->
+        <mxCell id="loop" value="Vòng lặp chính&#xa;(FreeRTOS Scheduler)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="340" y="605" width="130" height="45" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrows -->
+        <mxCell id="a1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2" edge="1" parent="1" source="start" target="init1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="a2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2" edge="1" parent="1" source="init1" target="init2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="a3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2" edge="1" parent="1" source="init2" target="init3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="a4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2" edge="1" parent="1" source="init3" target="init4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="a5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2" edge="1" parent="1" source="init4" target="input1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="a6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2" edge="1" parent="1" source="input1" target="tasks">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="a7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2" edge="1" parent="1" source="tasks" target="sub1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="405" y="510" />
+              <mxPoint x="135" y="510" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="a8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2" edge="1" parent="1" source="tasks" target="sub2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="405" y="510" />
+              <mxPoint x="285" y="510" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="a9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2" edge="1" parent="1" source="tasks" target="sub3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="405" y="510" />
+              <mxPoint x="435" y="510" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="a10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2" edge="1" parent="1" source="tasks" target="sub4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="405" y="510" />
+              <mxPoint x="585" y="510" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="a11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2" edge="1" parent="1" source="sub1" target="loop">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="135" y="627" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="a12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2" edge="1" parent="1" source="sub2" target="loop">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="285" y="627" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="a13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2" edge="1" parent="1" source="sub3" target="loop">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="435" y="585" />
+              <mxPoint x="435" y="585" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="a14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2" edge="1" parent="1" source="sub4" target="loop">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="585" y="627" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Decision: System power off? -->
+        <mxCell id="dec-stop" value="Tắt nguồn&#xa;hệ thống?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="365" y="680" width="90" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- End (Oval) -->
+        <mxCell id="end" value="Kết thúc" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="360" y="770" width="100" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: loop to decision -->
+        <mxCell id="a15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2" edge="1" parent="1" source="loop" target="dec-stop">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: Yes -> End -->
+        <mxCell id="a16" value="Có" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=11" edge="1" parent="1" source="dec-stop" target="end">
+          <mxGeometry x="-0.2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Loop back arrow (dashed) -->
+        <mxCell id="loop-back" value="Không" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;dashed=1;fontSize=11" edge="1" parent="1" source="dec-stop" target="sub1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="720" y="712" />
+              <mxPoint x="720" y="547" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Note -->
+        <mxCell id="note" value="Các Task chạy song song&#xa;do FreeRTOS quản lý" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;fontSize=10;fontStyle=2;rounded=1" vertex="1" parent="1">
+          <mxGeometry x="550" y="605" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

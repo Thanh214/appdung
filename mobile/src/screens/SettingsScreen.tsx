@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Alert } from 'react-native';
+import { View, Alert, ScrollView } from 'react-native';
 import { Appbar, Button, Card, Text, IconButton, useTheme, Divider } from 'react-native-paper';
 import BottomTabs from '@/components/BottomTabs';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -204,7 +204,11 @@ export default function SettingsScreen({ navigation }: Props) {
           svc.requestInfo(); // Request info để lấy version
         }} />
       </Appbar.Header>
-      <View style={{ padding: 16, paddingBottom: 96, gap: 12 }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: 16, paddingBottom: 96, gap: 12 }}
+        showsVerticalScrollIndicator={false}
+      >
         <Card>
           <Card.Title title="Nhiệt độ (°C)" />
           <Card.Content>
@@ -322,10 +326,10 @@ export default function SettingsScreen({ navigation }: Props) {
             </Button>
           </Card.Content>
         </Card>
-      </View>
-      <BottomTabs current="Settings" onNavigate={(key)=>{ 
+      </ScrollView>
+      <BottomTabs current="Settings" onNavigate={(key)=>{
         if (key==='Dashboard') navigation.navigate('Dashboard');
-        else if (key==='Charts') navigation.navigate('Charts'); 
+        else if (key==='Charts') navigation.navigate('Charts');
       }} />
     </View>
   );

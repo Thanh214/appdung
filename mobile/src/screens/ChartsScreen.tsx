@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { ScrollView, View, Dimensions, StyleSheet } from 'react-native';
-import { Text, Card, Appbar, useTheme, SegmentedButtons } from 'react-native-paper';
+import { ScrollView, View, Dimensions, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { Text, Card, Appbar, useTheme, Button } from 'react-native-paper';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { RootStackParamList } from '../../App';
 import BottomTabs from '@/components/BottomTabs';
 import { ServerDataService } from '@/services/serverData';
@@ -22,29 +23,27 @@ export default function ChartsScreen({ navigation }: Props) {
   const theme = useTheme();
   const [history, setHistory] = useState<ChartData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [timeRange, setTimeRange] = useState<'1d' | '7d' | '14d' | '30d'>('1d');
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const serverDataService = useRef(ServerDataService.getInstance()).current;
   const screenWidth = Dimensions.get('window').width;
 
   useEffect(() => {
     loadDataFromServer();
-  }, [timeRange]);
+  }, [selectedDate]);
 
-  // Lấy dữ liệu trực tiếp từ server
+  // Lấy dữ liệu trực tiếp từ server cho ngày được chọn
   const loadDataFromServer = async () => {
     setLoading(true);
     try {
-      let hours: number;
-      let limit: number;
-      switch (timeRange) {
-        case '1d': hours = 24; limit = 1440; break;      // 1 ngày (24h * 60 records/h = 1440)
-        case '7d': hours = 168; limit = 10080; break;    // 7 ngày
-        case '14d': hours = 336; limit = 20160; break;   // 14 ngày
-        case '30d': hours = 720; limit = 43200; break;   // 30 ngày
-        default: hours = 24; limit = 1440;
-      }
+      // Tính toán số giờ từ ngày được chọn đến hiện tại
+      const now = new Date();
+      const diffMs = now.getTime() - selectedDate.getTime();
+      const diffHours = Math.ceil(diffMs / (1000 * 60 * 60));
+      const hours = Math.max(24, diffHours); // Tối thiểu 24 giờ
+      const limit = hours * 60; // 60 records mỗi giờ
 
-      console.log(`[Charts] Fetching ${hours}h data from server...`);
+      console.log(`[Charts] Fetching data from ${selectedDate.toLocaleDateString('vi-VN')} (${hours}h)...`);
       const serverData = await serverDataService.fetchSensorData(hours, limit);
 
       // Chuyển đổi dữ liệu server thành format cho biểu đồ
@@ -70,6 +69,26 @@ export default function ChartsScreen({ navigation }: Props) {
     if (key !== 'Charts') {
       navigation.navigate(key as any);
     }
+  };
+
+  const handleDateChange = (event: any, date?: Date) => {
+    setShowDatePicker(false);
+    if (date) {
+      setSelectedDate(date);
+    }
+  };
+
+  // Lọc dữ liệu chỉ lấy của ngày được chọn
+  const getFilteredData = () => {
+    const startOfDay = new Date(selectedDate);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(selectedDate);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    return history.filter(record => {
+      const recordDate = new Date(record.timestamp);
+      return recordDate >= startOfDay && recordDate <= endOfDay;
+    });
   };
 
   // Simple chart component
@@ -195,7 +214,10 @@ export default function ChartsScreen({ navigation }: Props) {
     unit: string,
     color: string
   ) => {
-    if (history.length === 0) {
+    // Lấy dữ liệu đã filter theo ngày
+    const filteredData = getFilteredData();
+
+    if (filteredData.length === 0) {
       return (
         <Card style={styles.chartCard}>
           <Card.Content>
@@ -203,16 +225,16 @@ export default function ChartsScreen({ navigation }: Props) {
               {title}
             </Text>
             <View style={styles.noDataContainer}>
-              <Text>Chưa có dữ liệu</Text>
+              <Text>Không có dữ liệu cho ngày {selectedDate.toLocaleDateString('vi-VN')}</Text>
             </View>
           </Card.Content>
         </Card>
       );
     }
 
-    // Get chart data
-    const sortedHistory = [...history].sort((a, b) => a.timestamp - b.timestamp);
-    const step = Math.max(1, Math.floor(sortedHistory.length / 15)); // Max 15 points
+    // Get chart data từ dữ liệu đã filter
+    const sortedHistory = [...filteredData].sort((a, b) => a.timestamp - b.timestamp);
+    const step = Math.max(1, Math.floor(sortedHistory.length / 20)); // Max 20 points
     const chartData = sortedHistory
       .filter((_, index) => index % step === 0)
       .map(record => record[field]);
@@ -288,18 +310,32 @@ export default function ChartsScreen({ navigation }: Props) {
         </View>
       )}
 
-      <View style={styles.timeRangeContainer}>
-        <SegmentedButtons
-          value={timeRange}
-          onValueChange={(value) => setTimeRange(value as '1d' | '7d' | '14d' | '30d')}
-          buttons={[
-            { value: '1d', label: '1 ngày' },
-            { value: '7d', label: '7 ngày' },
-            { value: '14d', label: '14 ngày' },
-            { value: '30d', label: '30 ngày' },
-          ]}
-          style={styles.segmentedButtons}
-        />
+      <View style={styles.datePickerContainer}>
+        <TouchableOpacity
+          style={styles.dateButton}
+          onPress={() => setShowDatePicker(true)}
+        >
+          <Text style={styles.dateLabel}>Chọn ngày:</Text>
+          <Text style={styles.dateText}>
+            {selectedDate.toLocaleDateString('vi-VN', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
+          </Text>
+        </TouchableOpacity>
+
+        {showDatePicker && (
+          <DateTimePicker
+            value={selectedDate}
+            mode="date"
+            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+            onChange={handleDateChange}
+            maximumDate={new Date()}
+            locale="vi-VN"
+          />
+        )}
       </View>
 
       <ScrollView 
@@ -341,12 +377,29 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fef9c3',
   },
-  timeRangeContainer: {
+  datePickerContainer: {
     padding: 16,
     backgroundColor: '#fef9c3',
   },
-  segmentedButtons: {
+  dateButton: {
     backgroundColor: 'white',
+    padding: 16,
+    borderRadius: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  dateLabel: {
+    fontSize: 14,
+    color: '#6b7280',
+    marginBottom: 8,
+  },
+  dateText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#16a34a',
   },
   scrollView: {
     flex: 1,
