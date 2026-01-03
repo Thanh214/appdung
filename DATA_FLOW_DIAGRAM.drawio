@@ -1,0 +1,457 @@
+<mxfile host="app.diagrams.net" modified="2025-12-31T00:00:00.000Z" agent="Kiro" version="24.0.0">
+  <diagram name="Tổng quan hệ thống" id="overview">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="HỆ THỐNG NHÀ KÍNH IOT - LUỒNG DỮ LIỆU" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="320" y="20" width="530" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- ESP32 Device -->
+        <mxCell id="esp32" value="&lt;b&gt;ESP32 DEVICE&lt;/b&gt;&lt;br&gt;(Firmware C++)&lt;br&gt;&lt;br&gt;• DHT22 Sensor&lt;br&gt;• Soil Sensor&lt;br&gt;• 2x Relay&lt;br&gt;• LCD 16x2&lt;br&gt;• 4 Buttons" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=center;verticalAlign=top;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="80" y="120" width="180" height="180" as="geometry" />
+        </mxCell>
+        
+        <!-- MQTT Broker -->
+        <mxCell id="mqtt" value="&lt;b&gt;MQTT BROKER&lt;/b&gt;&lt;br&gt;(Mosquitto)&lt;br&gt;&lt;br&gt;Port 9001 (WS)&lt;br&gt;Port 9002 (WSS)&lt;br&gt;Port 1883 (TCP)&lt;br&gt;Port 8883 (SSL)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=center;verticalAlign=top;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="440" y="120" width="180" height="180" as="geometry" />
+        </mxCell>
+        
+        <!-- Mobile App -->
+        <mxCell id="mobile" value="&lt;b&gt;MOBILE APP&lt;/b&gt;&lt;br&gt;(React Native)&lt;br&gt;&lt;br&gt;• Dashboard&lt;br&gt;• Charts&lt;br&gt;• Settings&lt;br&gt;• Notifications" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=center;verticalAlign=top;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="800" y="120" width="180" height="180" as="geometry" />
+        </mxCell>
+        
+        <!-- Web Server -->
+        <mxCell id="server" value="&lt;b&gt;WEB SERVER&lt;/b&gt;&lt;br&gt;(PHP + HTTP)&lt;br&gt;&lt;br&gt;• data_api.php&lt;br&gt;• upload.php&lt;br&gt;• version.php" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=center;verticalAlign=top;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="440" y="400" width="180" height="150" as="geometry" />
+        </mxCell>
+        
+        <!-- Database -->
+        <mxCell id="database" value="&lt;b&gt;DATABASE&lt;/b&gt;&lt;br&gt;(File/MySQL)&lt;br&gt;&lt;br&gt;• sensor_data&lt;br&gt;• devices&lt;br&gt;• firmware" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#e1d5e7;strokeColor=#9673a6;align=center;verticalAlign=top;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="470" y="620" width="120" height="140" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: ESP32 to MQTT (Telemetry) -->
+        <mxCell id="arrow1" value="① MQTT Publish&lt;br&gt;Telemetry (5s)&lt;br&gt;{temp,hum,soil,r1,r2}" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#0066CC;fontSize=11;" edge="1" parent="1" source="esp32" target="mqtt">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="260" y="180" as="sourcePoint" />
+            <mxPoint x="440" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Arrow: MQTT to Mobile (Forward) -->
+        <mxCell id="arrow2" value="② Forward&lt;br&gt;Realtime Data" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#0066CC;fontSize=11;" edge="1" parent="1" source="mqtt" target="mobile">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="620" y="180" as="sourcePoint" />
+            <mxPoint x="800" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Arrow: Mobile to MQTT (Control) -->
+        <mxCell id="arrow3" value="③ MQTT Publish&lt;br&gt;Control Command&lt;br&gt;{r1,r2,threshold}" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#CC0000;dashed=1;fontSize=11;" edge="1" parent="1" source="mobile" target="mqtt">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="800" y="240" as="sourcePoint" />
+            <mxPoint x="620" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Arrow: MQTT to ESP32 (Control) -->
+        <mxCell id="arrow4" value="④ Forward&lt;br&gt;Control" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#CC0000;dashed=1;fontSize=11;" edge="1" parent="1" source="mqtt" target="esp32">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="440" y="240" as="sourcePoint" />
+            <mxPoint x="260" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Arrow: ESP32 to Server (HTTP POST) -->
+        <mxCell id="arrow5" value="⑤ HTTP POST&lt;br&gt;Save Data (5min)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#009900;fontSize=11;" edge="1" parent="1" source="esp32" target="server">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="170" y="300" as="sourcePoint" />
+            <mxPoint x="530" y="400" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="170" y="340" />
+              <mxPoint x="320" y="340" />
+              <mxPoint x="320" y="475" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Arrow: Server to Database -->
+        <mxCell id="arrow6" value="⑥ Save" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#009900;fontSize=11;" edge="1" parent="1" source="server" target="database">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="530" y="550" as="sourcePoint" />
+            <mxPoint x="530" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Arrow: Mobile to Server (HTTP GET) -->
+        <mxCell id="arrow7" value="⑦ HTTP GET&lt;br&gt;Query History" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#FF6600;fontSize=11;" edge="1" parent="1" source="mobile" target="server">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="890" y="300" as="sourcePoint" />
+            <mxPoint x="620" y="475" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="890" y="340" />
+              <mxPoint x="740" y="340" />
+              <mxPoint x="740" y="475" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Arrow: Database to Server to Mobile -->
+        <mxCell id="arrow8" value="⑧ Return Data" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#FF6600;dashed=1;fontSize=11;" edge="1" parent="1" source="database" target="mobile">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590" y="690" as="sourcePoint" />
+            <mxPoint x="890" y="300" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="760" y="690" />
+              <mxPoint x="760" y="340" />
+              <mxPoint x="890" y="340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Legend Box -->
+        <mxCell id="legend" value="&lt;b&gt;CHÚ THÍCH&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;align=left;verticalAlign=top;fontSize=12;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="80" y="620" width="280" height="140" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend1" value="━━━ Dữ liệu Realtime (MQTT)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#0066CC;" vertex="1" parent="1">
+          <mxGeometry x="90" y="650" width="260" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend2" value="- - - Lệnh điều khiển (MQTT)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#CC0000;" vertex="1" parent="1">
+          <mxGeometry x="90" y="675" width="260" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend3" value="━━━ Lưu trữ dữ liệu (HTTP POST)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#009900;" vertex="1" parent="1">
+          <mxGeometry x="90" y="700" width="260" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend4" value="━━━ Truy vấn lịch sử (HTTP GET)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#FF6600;" vertex="1" parent="1">
+          <mxGeometry x="90" y="725" width="260" height="20" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+  
+  <!-- Page 2: Chi tiết luồng dữ liệu -->
+  <diagram name="Luồng dữ liệu chi tiết" id="details">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1600" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title2" value="LUỒNG DỮ LIỆU CHI TIẾT" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="320" y="20" width="530" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Section 1: Telemetry Flow -->
+        <mxCell id="section1" value="&lt;b&gt;1. LUỒNG DỮ LIỆU CẢM BIẾN (Realtime)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="80" width="900" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="esp32_1" value="ESP32" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="120" y="130" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="mqtt_1" value="MQTT Broker" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="480" y="130" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="mobile_1" value="Mobile App" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="840" y="130" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step1_1" value="① Đọc cảm biến&lt;br&gt;(5 giây/lần)&lt;br&gt;temp, hum, soil" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="120" y="200" width="120" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow1_1" value="② PUBLISH&lt;br&gt;Topic: greenhouse/{ID}/telemetry&lt;br&gt;Payload: {temp,hum,soil,r1,r2}" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#0066CC;fontSize=10;" edge="1" parent="1" source="esp32_1" target="mqtt_1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow1_2" value="③ FORWARD" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#0066CC;fontSize=10;" edge="1" parent="1" source="mqtt_1" target="mobile_1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step1_2" value="④ Hiển thị&lt;br&gt;- Dashboard&lt;br&gt;- Lưu local&lt;br&gt;- Vẽ chart" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="840" y="200" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Section 2: Control Flow -->
+        <mxCell id="section2" value="&lt;b&gt;2. LUỒNG ĐIỀU KHIỂN&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;verticalAlign=top;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="320" width="900" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="mobile_2" value="Mobile App" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="120" y="370" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="mqtt_2" value="MQTT Broker" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="480" y="370" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="esp32_2" value="ESP32" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="840" y="370" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step2_1" value="① User bấm nút&lt;br&gt;Bật/tắt relay&lt;br&gt;Đặt ngưỡng" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="120" y="440" width="120" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow2_1" value="② PUBLISH&lt;br&gt;Topic: greenhouse/{ID}/control&lt;br&gt;Payload: {r1:1, r2:0}" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#CC0000;fontSize=10;" edge="1" parent="1" source="mobile_2" target="mqtt_2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow2_2" value="③ FORWARD" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#CC0000;fontSize=10;" edge="1" parent="1" source="mqtt_2" target="esp32_2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step2_2" value="④ Thực thi&lt;br&gt;- Bật relay&lt;br&gt;- Hiển thị LCD&lt;br&gt;- Gửi status" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="840" y="440" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Section 3: Storage Flow -->
+        <mxCell id="section3" value="&lt;b&gt;3. LUỒNG LƯU TRỮ DỮ LIỆU&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;verticalAlign=top;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="560" width="900" height="220" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="esp32_3" value="ESP32" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="120" y="610" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="server_3" value="Web Server&lt;br&gt;(data_api.php)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="480" y="610" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="db_3" value="Database" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="860" y="600" width="60" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step3_1" value="① Gom dữ liệu&lt;br&gt;(5 phút/lần)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="120" y="680" width="120" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow3_1" value="② HTTP POST&lt;br&gt;Body: {device_id, temp, hum, soil, r1, r2}" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#009900;fontSize=10;" edge="1" parent="1" source="esp32_3" target="server_3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow3_2" value="③ Validate &amp; Save" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#009900;fontSize=10;" edge="1" parent="1" source="server_3" target="db_3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step3_2" value="④ Lưu vào&lt;br&gt;- File JSON&lt;br&gt;- MySQL" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="840" y="690" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Section 4: History Query -->
+        <mxCell id="section4" value="&lt;b&gt;4. LUỒNG XEM LỊCH SỬ&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="820" width="900" height="220" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="mobile_4" value="Mobile App" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="120" y="870" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="server_4" value="Web Server&lt;br&gt;(data_api.php)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="480" y="870" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="db_4" value="Database" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="860" y="860" width="60" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step4_1" value="① User chọn ngày&lt;br&gt;xem chart" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="120" y="940" width="120" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow4_1" value="② HTTP GET&lt;br&gt;?hours=24&amp;limit=100" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#FF6600;fontSize=10;" edge="1" parent="1" source="mobile_4" target="server_4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow4_2" value="③ Query" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#FF6600;fontSize=10;" edge="1" parent="1" source="server_4" target="db_4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow4_3" value="④ Return" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#FF6600;dashed=1;fontSize=10;" edge="1" parent="1" source="db_4" target="server_4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="890" y="920" />
+              <mxPoint x="530" y="920" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow4_4" value="⑤ Response" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#FF6600;dashed=1;fontSize=10;" edge="1" parent="1" source="server_4" target="mobile_4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="530" y="920" />
+              <mxPoint x="170" y="920" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="step4_2" value="⑥ Vẽ biểu đồ&lt;br&gt;- Filter theo ngày&lt;br&gt;- Trục X: time&lt;br&gt;- Trục Y: value" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="120" y="980" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Section 5: OTA Update -->
+        <mxCell id="section5" value="&lt;b&gt;5. LUỒNG CẬP NHẬT FIRMWARE (OTA)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="1080" width="900" height="280" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="dev_5" value="Developer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="120" y="1130" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="server_5" value="Web Server&lt;br&gt;(upload.php)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="400" y="1130" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="esp32_5" value="ESP32" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="720" y="1130" width="100" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step5_1" value="① Build firmware&lt;br&gt;- firmware.bin&lt;br&gt;- version.json" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="120" y="1200" width="120" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow5_1" value="② Upload" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#6600CC;fontSize=10;" edge="1" parent="1" source="dev_5" target="server_5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step5_2" value="③ Lưu vào&lt;br&gt;/firmware/" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="400" y="1200" width="100" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow5_2" value="④ Check version&lt;br&gt;(1 giờ/lần)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#6600CC;fontSize=10;" edge="1" parent="1" source="esp32_5" target="server_5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="770" y="1250" />
+              <mxPoint x="450" y="1250" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow5_3" value="⑤ Response&lt;br&gt;{version, url}" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#6600CC;dashed=1;fontSize=10;" edge="1" parent="1" source="server_5" target="esp32_5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="450" y="1280" />
+              <mxPoint x="770" y="1280" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow5_4" value="⑥ Download .bin" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#6600CC;fontSize=10;" edge="1" parent="1" source="esp32_5" target="server_5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="770" y="1310" />
+              <mxPoint x="450" y="1310" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="step5_3" value="⑦ Flash &amp; Reboot" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="720" y="1320" width="120" height="30" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+  
+  <!-- Page 3: Nơi lưu trữ dữ liệu -->
+  <diagram name="Nơi lưu trữ dữ liệu" id="storage">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title3" value="NƠI LƯU TRỮ DỮ LIỆU" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="320" y="20" width="530" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- ESP32 Storage -->
+        <mxCell id="esp32_storage" value="&lt;b&gt;ESP32 (Firmware)&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;EEPROM/NVS:&lt;/b&gt;&lt;br&gt;• WiFi SSID &amp; Password&lt;br&gt;• Device ID &amp; Key&lt;br&gt;• MQTT Broker config&lt;br&gt;• Ngưỡng cảnh báo&lt;br&gt;• Chế độ Auto/Manual&lt;br&gt;&lt;br&gt;&lt;b&gt;RAM (Runtime):&lt;/b&gt;&lt;br&gt;• Giá trị cảm biến hiện tại&lt;br&gt;• Trạng thái relay&lt;br&gt;• Trạng thái kết nối" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="80" y="100" width="250" height="280" as="geometry" />
+        </mxCell>
+        
+        <!-- Mobile Storage -->
+        <mxCell id="mobile_storage" value="&lt;b&gt;Mobile App (React Native)&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;SecureStore (Encrypted):&lt;/b&gt;&lt;br&gt;• Device ID &amp; Key&lt;br&gt;• MQTT credentials&lt;br&gt;&lt;br&gt;&lt;b&gt;AsyncStorage (Local):&lt;/b&gt;&lt;br&gt;• Lịch sử dữ liệu (7 ngày)&lt;br&gt;• Danh sách thông báo&lt;br&gt;• Cài đặt người dùng&lt;br&gt;&lt;br&gt;&lt;b&gt;RAM (Runtime):&lt;/b&gt;&lt;br&gt;• Dữ liệu realtime từ MQTT&lt;br&gt;• State của UI" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="380" y="100" width="250" height="280" as="geometry" />
+        </mxCell>
+        
+        <!-- Server Storage -->
+        <mxCell id="server_storage" value="&lt;b&gt;Web Server (PHP)&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;File System:&lt;/b&gt;&lt;br&gt;• /greenhouse/data/&lt;br&gt;  - sensors_log.json&lt;br&gt;  - devices.json&lt;br&gt;&lt;br&gt;• /greenhouse/firmware/&lt;br&gt;  - firmware.bin&lt;br&gt;  - version.json&lt;br&gt;&lt;br&gt;&lt;b&gt;MySQL Database:&lt;/b&gt;&lt;br&gt;• sensor_data table&lt;br&gt;• devices table&lt;br&gt;• firmware_versions table" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;verticalAlign=top;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="680" y="100" width="250" height="280" as="geometry" />
+        </mxCell>
+        
+        <!-- MQTT Storage -->
+        <mxCell id="mqtt_storage" value="&lt;b&gt;MQTT Broker (Mosquitto)&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;RAM (Volatile):&lt;/b&gt;&lt;br&gt;• Tin nhắn đang chờ gửi&lt;br&gt;• Danh sách client kết nối&lt;br&gt;• Retained messages&lt;br&gt;&lt;br&gt;&lt;b&gt;Disk (Persistent):&lt;/b&gt;&lt;br&gt;• mosquitto.db&lt;br&gt;• Logs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="80" y="420" width="250" height="200" as="geometry" />
+        </mxCell>
+        
+        <!-- Frequency Table -->
+        <mxCell id="freq_table" value="&lt;b&gt;TẦN SUẤT TRUYỀN DỮ LIỆU&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;align=center;verticalAlign=top;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="380" y="420" width="550" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="freq_header" value="Loại dữ liệu | Tần suất | Giao thức" style="text;html=1;strokeColor=none;fillColor=#e1d5e7;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontStyle=1;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="390" y="455" width="530" height="25" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="freq1" value="Dữ liệu cảm biến (realtime) | 5 giây | MQTT (QoS 0)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="390" y="485" width="530" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="freq2" value="Lưu vào server | 5 phút | HTTP POST" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="390" y="510" width="530" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="freq3" value="Kiểm tra firmware mới | 1 giờ | HTTP GET" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="390" y="535" width="530" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="freq4" value="Lệnh điều khiển | On-demand | MQTT (QoS 1)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="390" y="560" width="530" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="freq5" value="Trạng thái thiết bị | 30 giây | MQTT (QoS 0)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="390" y="585" width="530" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- MQTT Topics -->
+        <mxCell id="topics" value="&lt;b&gt;MQTT TOPICS&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="660" width="850" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="topic1" value="• greenhouse/{device_id}/telemetry - Dữ liệu cảm biến" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="90" y="695" width="400" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="topic2" value="• greenhouse/{device_id}/control - Lệnh điều khiển" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="90" y="720" width="400" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="topic3" value="• greenhouse/{device_id}/status - Trạng thái thiết bị" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="90" y="745" width="400" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="topic4" value="• greenhouse/{device_id}/config - Cấu hình thiết bị" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="500" y="695" width="400" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="qos_note" value="QoS 0: At most once | QoS 1: At least once | QoS 2: Exactly once" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="500" y="720" width="400" height="40" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

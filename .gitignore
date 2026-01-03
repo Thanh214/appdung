@@ -33,3 +33,20 @@ yarn-error.log*
 # Temporary files
 *.tmp
 *.temp
+
+# Expo
+.expo/
+**/.expo/
+
+# Android
+mobile/android/.gradle/
+mobile/android/.kotlin/
+mobile/android/app/build/
+mobile/android/build/
+*.apk
+*.aab
+
+# iOS
+mobile/ios/Pods/
+mobile/ios/build/
+*.ipa
